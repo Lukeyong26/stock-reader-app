@@ -56,18 +56,26 @@ def main():
     # Continue on from here:
     dataframe = []
     for row in values:
-      data = {"date":row[0], "open":row[1], "close":row[4], "high":row[2], "low":row[3]}
+      data = {"date":row[0], "open":float(row[1]), "close":float(row[4]), "high":float(row[2]), "low":float(row[3])}
       dataframe.append(data)
 
     result = signal_generator(dataframe)
-
+    print(result)
 
   except HttpError as err:
     print(err)
 
 def signal_generator(df):
+  fifty_sma = 0
+  for frame in df[0:50]:
+    fifty_sma = fifty_sma + frame["close"]
+  fifty_sma = fifty_sma/50
+  hun_sma = 0
+  for frame in df[0:100]:
+    hun_sma = hun_sma + frame["close"]
+  hun_sma = hun_sma/100
   
-  return True
+  return hun_sma < fifty_sma
 
 if __name__ == "__main__":
   main()
